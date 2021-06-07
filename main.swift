@@ -453,3 +453,28 @@ class ChangeOrderTaskExecute : Menu {
 		self.parent!.execute()
     }
 }
+
+class ManageCategoriesMenu : Menu {
+
+	override func addMenus () {
+		menusIn[menusDescription.count] = OpenCategoryExecute(self, false)
+		menusDescription.append("Open an specific category")
+
+		menusIn[menusDescription.count] = CreateNewCategoryExecute(self, false)
+		menusDescription.append("Create a new category")
+
+		menusIn[menusDescription.count] = AddTaskToCategoryExecute(self, false)
+		menusDescription.append("Add a task to a category")
+	}
+
+	override func printPrefix() {
+		let categories = Menu.controller.getCategories()
+		if (categories.count == 0) {
+			print("There is no category to show.")
+		} else {
+			for i in 0..<categories.count {
+				print(">\t\(categories[i])")
+			}
+		}
+	}
+}
