@@ -276,3 +276,38 @@ class TasksMenu : Menu {
 		}
 	}
 }
+
+class CreateTaskExecute : Menu {
+
+	override func show() {}
+
+	override func execute() {
+		let title = getValidInput(prompt: "Please enter title:") {
+			if ($0 == "") {
+				print("Empty title is not valid.")
+				return false
+			}
+			return true
+		}
+		let content = getValidInput(prompt: "Please enter content:") {
+			if ($0! == "") {
+				print("Empty content is not valid.")
+				return false
+			}
+			return true
+		}
+		let piorityString = getValidInput(prompt: "Please enter priority:") {
+			if ($0! == "") {
+				print("Empty priority is not valid.")
+				return false
+			} else if Int($0!) == nil {
+				print("Non-numeric priority is not valid.")
+				return false
+			}
+			return true
+		}
+		Menu.controller.createTask(title: title, content: content, priority: Int(piorityString)!)
+		self.parent!.show()
+		self.parent!.execute()
+	}
+}
