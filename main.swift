@@ -215,3 +215,36 @@ class Menu {
 		return userInput!
 	}
 }
+
+class ExitExecute : Menu {
+
+	override func show() {
+		print("Good to see you!")
+		Thread.sleep(forTimeInterval: 3)
+	}
+
+	override func execute() {
+		exit(0)
+	}
+}
+
+class BackExecute : Menu {
+
+	override func show() {}
+
+	override func execute() {
+		self.parent!.parent!.show()
+		self.parent!.parent!.execute()
+	}
+}
+
+class RootMenu : Menu {
+
+	override func addMenus() {
+		menusIn[menusDescription.count] = TasksMenu(self, false)
+		menusDescription.append("My tasks")
+
+		menusIn[menusDescription.count] = ManageCategoriesMenu(self, false)
+		menusDescription.append("Manage categories")
+	}
+}
