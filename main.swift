@@ -311,3 +311,143 @@ class CreateTaskExecute : Menu {
 		self.parent!.execute()
 	}
 }
+
+class EditTaskExecute : Menu {
+
+	override func show() {}
+
+	override func execute() {
+		let tasks = Menu.controller.getTasks()
+		if tasks.count == 0 {
+			print("There is no task to edit.")
+			self.parent!.show()
+			self.parent!.execute()
+			return
+		}
+		for i in 0..<tasks.count {
+			print("\(i + 1).\t\(tasks[i])")
+		}
+		let indexString = getValidInput(prompt: "Please enter index of task you want to edit (0 to escape):") {
+			if ($0! == "") {
+				print("Empty index is not valid.")
+				return false
+			} else if Int($0!) == nil {
+				print("Non-numeric index is not valid.")
+				return false
+			} else if !(0 <= Int($0!)! && Int($0!)! <= tasks.count) {
+				print("Index out of range.")
+				return false
+			}
+			return true
+		}
+		if Int(indexString)! == 0 {
+			self.parent!.show()
+			self.parent!.execute()
+		}
+		print("Please enter title (enter to escape):", terminator: " ")
+		let title = readLine()
+		print("Please enter content (enter to escape):", terminator: " ")
+		let content = readLine()
+		let piorityString = getValidInput(prompt: "Please enter priority (enter to escape):") {
+			if $0! != "" && Int($0!) == nil {
+				print("Non-numeric priority is not valid.")
+				return false
+			}
+			return true
+		}
+		Menu.controller.editTask(task: tasks[Int(indexString)! - 1], newTitle: title, newContent: content, newPriority: Int(piorityString))
+		self.parent!.show()
+		self.parent!.execute()
+	}
+}
+
+class DeleteTaskExecute : Menu {
+
+	override func show() {}
+
+	override func execute() {
+		let tasks = Menu.controller.getTasks()
+		if tasks.count == 0 {
+			print("There is no task to delete.")
+			self.parent!.show()
+			self.parent!.execute()
+			return
+		}
+		for i in 0..<tasks.count {
+			print("\(i + 1).\t\(tasks[i])")
+		}
+		let indexString = getValidInput(prompt: "Please enter index of task you want to delete (0 to escape):") {
+			if ($0! == "") {
+				print("Empty index is not valid.")
+				return false
+			} else if Int($0!) == nil {
+				print("Non-numeric index is not valid.")
+				return false
+			} else if !(0 <= Int($0!)! && Int($0!)! <= tasks.count) {
+				print("Index out of range.")
+				return false
+			}
+			return true
+		}
+		if Int(indexString)! != 0 {
+			Menu.controller.deleteTask(task: tasks[Int(indexString)! - 1])
+		}
+		self.parent!.show()
+		self.parent!.execute()
+	}
+}
+
+class ChangeOrderTaskExecute : Menu {
+
+	override func show() {}
+
+	override func execute() {
+		print("1. Sorted by title")
+		print("2. Sorted by priority")
+		print("3. Sorted by creation date")
+		let indexString = getValidInput(prompt: "How do you want to sort tasks?") {
+			if ($0! == "") {
+				print("Empty index is not valid.")
+				return false
+			} else if Int($0!) == nil {
+				print("Non-numeric index is not valid.")
+				return false
+			} else if !(1 <= Int($0!)! && Int($0!)! <= 3) {
+				print("Index out of range.")
+				return false
+			}
+			return true
+		}
+		let sortByInt = Int(indexString)!
+		var sortBy: SortBy
+		if (sortByInt == 1) {
+			sortBy = SortBy.BY_TITLE
+		} else if (sortByInt == 2) {
+			sortBy = SortBy.BY_PRIORITY
+		} else {
+			sortBy = SortBy.BY_DATE
+		}
+		print("1. Ascending")
+		print("2. Descending")
+		let dirString = getValidInput(prompt: "In which direction?") {
+			if ($0! == "") {
+				print("Empty index is not valid.")
+				return false
+			} else if Int($0!) == nil {
+				print("Non-numeric index is not valid.")
+				return false
+			} else if !(1 <= Int($0!)! && Int($0!)! <= 2) {
+				print("Index out of range.")
+				return false
+			}
+			return true
+		}
+		var ascending = false
+		if (Int(dirString)! == 1) {
+			ascending = true
+		}
+		Menu.controller.changeOrder(sortBy: sortBy, ascending: ascending)
+		self.parent!.show()
+		self.parent!.execute()
+    }
+}
