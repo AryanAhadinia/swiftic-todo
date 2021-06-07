@@ -51,3 +51,107 @@ class Task : Equatable, CustomStringConvertible  {
         return o1.id == o2.id
     }
 }
+
+class Controller {
+	var tasks: Array<Task>
+	var categories: Array<Category>
+
+	var sortByState: SortBy
+	var ascendingState: Bool
+
+	public init() {
+		self.tasks = []
+		self.categories = []
+		self.sortByState = SortBy.BY_PRIORITY
+		self.ascendingState = true
+	}
+
+	public func createTask(title: String, content: String, priority: Int) {
+		tasks.append(Task(title: title, content: content, priority: priority))
+		reorder()
+	}
+
+	public func getTasks() -> Array<Task> {
+		return tasks
+	}
+
+	public func changeOrder(sortBy: SortBy, ascending: Bool) {
+		self.sortByState = sortBy
+		self.ascendingState = ascending
+		switch sortBy {
+			case SortBy.BY_TITLE: 
+				if (ascending){
+					self.tasks = self.tasks.sorted(by: { $0.title < $1.title })
+				} else {
+					self.tasks = self.tasks.sorted(by: { $0.title > $1.title })
+				}
+			case SortBy.BY_DATE:
+				if (ascending){
+					self.tasks = self.tasks.sorted(by: { $0.creationDate < $1.creationDate })
+				} else {
+					self.tasks = self.tasks.sorted(by: { $0.creationDate > $1.creationDate })
+				}
+			case SortBy.BY_PRIORITY:
+				if (ascending){
+					self.tasks = self.tasks.sorted(by: { $0.priority < $1.priority })
+				} else {
+					self.tasks = self.tasks.sorted(by: { $0.priority > $1.priority })
+				}
+		}
+	}
+
+	public func reorder() {
+		changeOrder(sortBy: self.sortByState, ascending: self.ascendingState)
+	}
+
+	public func editTask(task: Task, newTitle: String?, newContent: String?, newPriority: Int?) {
+		if newPriority != nil {
+			task.priority = newPriority!
+		}
+		if !(newContent ?? "").isEmpty {
+			task.content = newContent!
+		}
+		if !(newTitle ?? "").isEmpty {
+			task.title = newTitle!
+		}
+		reorder()
+	}
+
+	public func deleteTask(task: Task) {
+		tasks.removeAll() {$0 == task}
+		if task.category != nil{
+			task.category!.tasks.removeAll(where: {$0 == task})
+		}
+	}
+
+	public func createCategory(name: String) {
+		categories.append(Category(name: name))
+	}
+
+	public func addTaskToCategory(task: Task, category: Category) {
+		if task.category != nil {
+			task.category!.tasks.removeAll(where: {$0 == task})
+		}
+		task.category = category
+		category.tasks.append(task)
+	}
+
+	public func getCategories() -> Array<Category> {
+		return self.categories
+	}
+
+	public func isCategoryNameUsed(name : String) -> Bool {
+		for c in categories {
+			if c.name == name {
+				return true
+			}
+		}
+		return false
+	}
+}
+
+enum SortBy {
+	case BY_TITLE
+	case BY_PRIORITY
+	case BY_DATE
+}
