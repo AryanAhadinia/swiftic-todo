@@ -155,3 +155,63 @@ enum SortBy {
 	case BY_PRIORITY
 	case BY_DATE
 }
+
+class Menu {
+	static let controller = Controller()
+
+	var parent: Menu?
+	var menusIn: Dictionary<Int, Menu>
+	var menusDescription: Array<String>
+
+	public init(_ parent: Menu?, _ leaf: Bool) {
+		self.parent = parent
+		self.menusIn = Dictionary()
+		self.menusDescription = Array()
+		if !leaf {
+ 			if parent == nil {
+				menusIn[menusDescription.count] = ExitExecute(self, true)
+				menusDescription.append("Exit")
+			} else {
+				menusIn[menusDescription.count] = BackExecute(self, true)
+				menusDescription.append("Back")
+			}
+		}
+		addMenus()
+	}
+
+	public func addMenus() {}
+
+	public func printPrefix() {}
+
+	public func show() {
+		printPrefix()
+		for i in 0..<menusDescription.count {
+			print("\(i). \(menusDescription[i])")
+		}
+	}
+
+	public func execute() {
+		print("Please enter your command index:", terminator: " ")
+		let index = Int(readLine()!)
+		if index == nil {
+			print("Invalid command.")
+			self.execute()
+		} else if !(0 <= index! && index! < menusDescription.count) {
+			print("Index out of range.")
+			self.execute()
+		} else {
+			let next = menusIn[index!]!
+			next.show()
+			next.execute()
+		}
+	}
+
+	public func getValidInput(prompt p: String, validator v: (String?) -> Bool) -> String {
+		var userInput: String?
+		repeat {
+			print(p, terminator: " ")
+			userInput = readLine()
+		} while !v(userInput)
+		return userInput!
+	}
+}
