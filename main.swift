@@ -518,3 +518,25 @@ class OpenCategoryExecute : Menu {
 		self.parent!.execute()
 	}
 }
+
+class CreateNewCategoryExecute : Menu {
+
+	override func show() {}
+
+	override func execute() {
+	    let catName = getValidInput(prompt: "Please enter name:") {
+			if ($0 == "") {
+				print("Empty name is not valid.")
+				return false
+			}
+			if Menu.controller.isCategoryNameUsed(name: $0!) {
+			    print("Category with this name exists.")
+			    return false
+			}
+			return true
+		}
+		Menu.controller.createCategory(name: catName)
+		self.parent!.show()
+		self.parent!.execute()
+	}
+}
