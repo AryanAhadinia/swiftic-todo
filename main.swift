@@ -248,3 +248,31 @@ class RootMenu : Menu {
 		menusDescription.append("Manage categories")
 	}
 }
+
+class TasksMenu : Menu {
+
+	override func addMenus() {
+		menusIn[menusDescription.count] = CreateTaskExecute(self, false)
+		menusDescription.append("Create a new task")
+
+		menusIn[menusDescription.count] = EditTaskExecute(self, false)
+		menusDescription.append("Edit a task")
+
+		menusIn[menusDescription.count] = DeleteTaskExecute(self, false)
+		menusDescription.append("Delete a task")
+
+		menusIn[menusDescription.count] = ChangeOrderTaskExecute(self, false)
+		menusDescription.append("Show all tasks")
+	}
+
+	override func printPrefix() {
+		let tasks = Menu.controller.getTasks()
+		if (tasks.count == 0) {
+			print("There is no task to show.")
+		} else {
+			for i in 0..<tasks.count {
+				print(">\t\(tasks[i])")
+			}
+		}
+	}
+}
