@@ -1,3 +1,5 @@
+import Foundation
+
 class Category : CustomStringConvertible {
 	var name: String
 	var tasks: Array<Task>
