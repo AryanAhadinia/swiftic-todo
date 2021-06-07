@@ -597,3 +597,7 @@ class AddTaskToCategoryExecute : Menu {
 		self.parent!.execute()
 	}
 }
+
+let root = RootMenu(nil, false)
+root.show()
+root.execute()
