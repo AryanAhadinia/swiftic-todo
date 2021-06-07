@@ -540,3 +540,60 @@ class CreateNewCategoryExecute : Menu {
 		self.parent!.execute()
 	}
 }
+
+class AddTaskToCategoryExecute : Menu {
+
+	override func show() {}
+
+	override func execute() {
+	    let tasks = Menu.controller.getTasks()
+		let categories = Menu.controller.getCategories()
+		if tasks.count == 0 {
+			print("There is no task.\n")
+			self.parent!.show()
+			self.parent!.execute()
+			return
+		}
+		if categories.count == 0 {
+			print("There is no category.\n")
+			self.parent!.show()
+			self.parent!.execute()
+			return
+		}
+		for i in 0..<tasks.count {
+			print("\(i + 1).\t\(tasks[i])")
+		}
+		let indexString = getValidInput(prompt: "Please enter index of the task you want to add to a category:") {
+			if ($0! == "") {
+				print("Empty index is not valid.")
+				return false
+			} else if Int($0!) == nil {
+				print("Non-numeric index is not valid.")
+				return false
+			} else if !(0 < Int($0!)! && Int($0!)! <= tasks.count) {
+				print("Index out of range.")
+				return false
+			}
+			return true
+		}
+	    for i in 0..<categories.count {
+	        print("\(i + 1).\t\(categories[i])")
+	    }
+	    let categoryIndexString = getValidInput(prompt: "Please enter index of the category you want to add to it:") {
+			if ($0! == "") {
+				print("Empty index is not valid.")
+				return false
+			} else if Int($0!) == nil {
+				print("Non-numeric index is not valid.")
+				return false
+			} else if !(0 < Int($0!)! && Int($0!)! <= categories.count) {
+				print("Index out of range.")
+				return false
+			}
+			return true
+		}
+		Menu.controller.addTaskToCategory(task: tasks[Int(indexString)! - 1], category: categories[Int(categoryIndexString)! - 1])
+		self.parent!.show()
+		self.parent!.execute()
+	}
+}
