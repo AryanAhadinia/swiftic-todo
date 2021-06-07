@@ -478,3 +478,43 @@ class ManageCategoriesMenu : Menu {
 		}
 	}
 }
+
+class OpenCategoryExecute : Menu {
+
+	override func show() {}
+
+	override func execute() {
+	    let categories = Menu.controller.getCategories()
+		if categories.count == 0 {
+			print("There is no category to open.\n")
+			self.parent!.show()
+			self.parent!.execute()
+			return
+		}
+	    for i in 0..<categories.count {
+	        print("\(i + 1).\t\(categories[i])")
+	    }
+	    let indexString = getValidInput(prompt: "Please enter index of the category you want to open:") {
+			if ($0! == "") {
+				print("Empty index is not valid.")
+				return false
+			} else if Int($0!) == nil {
+				print("Non-numeric index is not valid.")
+				return false
+			} else if !(0 < Int($0!)! && Int($0!)! <= categories.count) {
+				print("Index out of range.")
+				return false
+			}
+			return true
+		}
+		if categories[Int(indexString)! - 1].tasks.count == 0 {
+			print("There is no task in this category.")
+		}
+		for i in 0..<categories[Int(indexString)! - 1].tasks.count {
+		    print("\(i + 1).\t\(categories[Int(indexString)! - 1].tasks[i])")
+		}
+		print("")
+		self.parent!.show()
+		self.parent!.execute()
+	}
+}
