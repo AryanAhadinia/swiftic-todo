@@ -1,5 +1,4 @@
 *.exp
 *.lib
-*.exe
 
 .vs
