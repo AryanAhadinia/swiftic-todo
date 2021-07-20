@@ -39,7 +39,7 @@ swiftc %SWIFTFLAGS% -emit-executable -o main.exe main.swift
     Please enter priority:    
 </div>
 
-برای این کار در منوی برنامه ابتدا گزینه my tasks را با عدد 1 و سپس گزینه create a new task را با عدد 2 انتخاب میکنیم.
+برای این کار در منوی برنامه ابتدا گزینه my tasks را با عدد 1 و سپس گزینه create a new task را با عدد 1 انتخاب میکنیم.
 سپس برنامه از شما نام و محتوا و اولویت تسک را میخواهد که آنها را وارد میکنید.
 تسک به این ترتیب ساخته میشود.
 
